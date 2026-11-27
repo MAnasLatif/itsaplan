@@ -29,12 +29,12 @@ export const id: EmailLocaleTexts = {
       button: 'Masuk',
     },
     inviteProject: {
-      subject: "Anda diundang ke {project} di It's a Plan",
+      subject: "Anda diundang ke {project} di It's Anas Plan",
       body: `{inviter} mengundang Anda untuk bergabung dengan {project} sebagai {role}.\n\n${INVITE_NEXT}`,
       button: 'Buka undangan',
     },
     inviteTeam: {
-      subject: "Anda diundang ke {team} di It's a Plan",
+      subject: "Anda diundang ke {team} di It's Anas Plan",
       body: `{inviter} mengundang Anda untuk bergabung dengan tim {team} sebagai {role}.\n\n${INVITE_NEXT}`,
       button: 'Buka undangan',
     },
@@ -74,8 +74,8 @@ export const id: EmailLocaleTexts = {
       button: 'Buka dokumen',
     },
     test: {
-      subject: "Tes email It's a Plan",
-      body: "Jika Anda bisa membaca ini, email dari It's a Plan berfungsi.",
+      subject: "Tes email It's Anas Plan",
+      body: "Jika Anda bisa membaca ini, email dari It's Anas Plan berfungsi.",
       button: '',
     },
   },

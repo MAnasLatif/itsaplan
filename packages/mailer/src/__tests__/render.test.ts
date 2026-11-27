@@ -16,7 +16,7 @@ import {
 } from '../index';
 
 const site = {
-  name: "It's a Plan",
+  name: "It's Anas Plan",
   url: 'https://plan.test',
   logoUrl: 'https://plan.test/logo.png',
 };
@@ -182,7 +182,7 @@ describe('renderEmail', () => {
     expect(email.html).toContain('<title>Subject</title>');
     expect(email.html).toContain('class="page" style="margin: 0;"');
     expect(email.html).toContain('@media (max-width: 600px)');
-    expect(email.html).toContain('It&#39;s a Plan https://plan.test');
+    expect(email.html).toContain('It&#39;s Anas Plan https://plan.test');
   });
 
   it('renders the default layout', () => {

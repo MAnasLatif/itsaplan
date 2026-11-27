@@ -28,12 +28,12 @@ export const zhCN: EmailLocaleTexts = {
       button: '登录',
     },
     inviteProject: {
-      subject: "你受邀加入 It's a Plan 上的 {project}",
+      subject: "你受邀加入 It's Anas Plan 上的 {project}",
       body: `{inviter} 邀请你以 {role} 身份加入 {project}。\n\n${INVITE_NEXT}`,
       button: '打开邀请',
     },
     inviteTeam: {
-      subject: "你受邀加入 It's a Plan 上的 {team}",
+      subject: "你受邀加入 It's Anas Plan 上的 {team}",
       body: `{inviter} 邀请你以 {role} 身份加入团队 {team}。\n\n${INVITE_NEXT}`,
       button: '打开邀请',
     },
@@ -73,8 +73,8 @@ export const zhCN: EmailLocaleTexts = {
       button: '打开文档',
     },
     test: {
-      subject: "It's a Plan 邮件测试",
-      body: "如果你能看到这封邮件，说明 It's a Plan 的邮件功能正常。",
+      subject: "It's Anas Plan 邮件测试",
+      body: "如果你能看到这封邮件，说明 It's Anas Plan 的邮件功能正常。",
       button: '',
     },
   },

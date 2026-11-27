@@ -16,7 +16,7 @@ self.addEventListener('push', (event) => {
     message = { body: event.data.text() };
   }
   event.waitUntil(
-    self.registration.showNotification(message.title || "It's a Plan", {
+    self.registration.showNotification(message.title || "It's Anas Plan", {
       body: message.body,
       tag: message.tag,
       data: { url: message.url },

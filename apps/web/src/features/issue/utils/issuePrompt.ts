@@ -81,7 +81,7 @@ export async function buildIssuePrompt(
   tags.push('</issue>');
 
   return [
-    `Work on Itsaplan issue ${issue.identifier}:`,
+    `Work on It's Anas Plan issue ${issue.identifier}:`,
     '',
     `Suggested branch name: ${branch}`,
     '',

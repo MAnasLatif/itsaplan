@@ -1,5 +1,5 @@
 {
-  "label": "Selamat datang di It's a Plan",
+  "label": "Selamat datang di It's Anas Plan",
   "goTo": "Buka slide {number}",
   "next": "Berikutnya",
   "start": "Mulai",
@@ -196,11 +196,11 @@
   },
   "showcase": {
     "title": "Tambahkan perusahaan Anda ke daftar",
-    "body": "Kirim logo, situs web, dan beberapa kata tentang cara tim Anda bekerja di It's a Plan. Kami memeriksa setiap permintaan, dan Anda bisa menurunkan logo kapan saja.",
+    "body": "Kirim logo, situs web, dan beberapa kata tentang cara tim Anda bekerja di It's Anas Plan. Kami memeriksa setiap permintaan, dan Anda bisa menurunkan logo kapan saja.",
     "open": "Tambahkan perusahaan saya",
     "dismiss": "Tidak, terima kasih",
     "art": {
-      "heading": "Siapa yang memakai It's a Plan",
+      "heading": "Siapa yang memakai It's Anas Plan",
       "yourLogo": "Logo Anda"
     }
   }

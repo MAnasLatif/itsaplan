@@ -29,12 +29,12 @@ export const ko: EmailLocaleTexts = {
       button: '로그인',
     },
     inviteProject: {
-      subject: "It's a Plan의 {project}에 초대되었습니다",
+      subject: "It's Anas Plan의 {project}에 초대되었습니다",
       body: `{inviter}님이 {role} 역할로 {project}에 참여하도록 초대했습니다.\n\n${INVITE_NEXT}`,
       button: '초대 열기',
     },
     inviteTeam: {
-      subject: "It's a Plan의 {team}에 초대되었습니다",
+      subject: "It's Anas Plan의 {team}에 초대되었습니다",
       body: `{inviter}님이 {role} 역할로 {team} 팀에 참여하도록 초대했습니다.\n\n${INVITE_NEXT}`,
       button: '초대 열기',
     },
@@ -74,8 +74,8 @@ export const ko: EmailLocaleTexts = {
       button: '문서 열기',
     },
     test: {
-      subject: "It's a Plan 이메일 테스트",
-      body: "이 메일이 보인다면 It's a Plan의 이메일 발송이 정상입니다.",
+      subject: "It's Anas Plan 이메일 테스트",
+      body: "이 메일이 보인다면 It's Anas Plan의 이메일 발송이 정상입니다.",
       button: '',
     },
   },

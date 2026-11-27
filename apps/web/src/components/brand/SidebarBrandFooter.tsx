@@ -54,7 +54,7 @@ export default function SidebarBrandFooter() {
   const content = (
     <div className="grid text-start leading-none group-data-[collapsible=icon]:hidden">
       <span className="text-base font-semibold tracking-tight text-sidebar-foreground">
-        It&apos;s a Plan
+        It&apos;s Anas Plan
       </span>
       {newerVersion ? (
         <span className="mt-1 flex items-center gap-1.5 text-[10px] font-medium tracking-wider text-primary uppercase">

@@ -21,7 +21,7 @@ import { trustedOrigins } from './origins';
 
 function emailSite(): EmailSite {
   const url = trustedOrigins[0];
-  return { name: "It's a Plan", url, logoUrl: `${url}/icon-192.png` };
+  return { name: "It's Anas Plan", url, logoUrl: `${url}/icon-192.png` };
 }
 
 export async function composeEmail(

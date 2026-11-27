@@ -11,7 +11,7 @@
   "vars": {
     "API_URL": "https://plan.anaslatif.dev/api",
     "APP_URL": "https://plan.anaslatif.dev",
-    "EMAIL_FROM": "It's a Plan <noreply@plan.anaslatif.dev>",
+    "EMAIL_FROM": "It's Anas Plan <noreply@plan.anaslatif.dev>",
     // Cloudflare sets this header at its edge and replaces any value a client sends.
     "CLIENT_IP_HEADER": "cf-connecting-ip",
   },

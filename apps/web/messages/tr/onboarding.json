@@ -1,5 +1,5 @@
 {
-  "label": "It's a Plan'a hoş geldiniz",
+  "label": "It's Anas Plan'a hoş geldiniz",
   "goTo": "{number}. slayta git",
   "next": "İleri",
   "start": "Başlayın",
@@ -196,11 +196,11 @@
   },
   "showcase": {
     "title": "Şirketinizi listeye ekleyin",
-    "body": "Logonuzu, web sitenizi ve ekibinizin It's a Plan'da nasıl çalıştığına dair birkaç kelime gönderin. Her isteği inceliyoruz ve logoyu istediğiniz zaman kaldırabilirsiniz.",
+    "body": "Logonuzu, web sitenizi ve ekibinizin It's Anas Plan'da nasıl çalıştığına dair birkaç kelime gönderin. Her isteği inceliyoruz ve logoyu istediğiniz zaman kaldırabilirsiniz.",
     "open": "Şirketimi ekle",
     "dismiss": "Hayır, teşekkürler",
     "art": {
-      "heading": "It's a Plan'ı kimler kullanıyor",
+      "heading": "It's Anas Plan'ı kimler kullanıyor",
       "yourLogo": "Logonuz"
     }
   }
