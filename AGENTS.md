@@ -6,6 +6,16 @@ web with shadcn/ui, better-auth, Drizzle + PostgreSQL.
 Before you change files in an app or package, read its `AGENTS.md`: `apps/api`, `apps/web`,
 `apps/worker`, `apps/bot`, `packages/auth`, `packages/db`. It overrides this file.
 
+## This fork
+
+This repository is our fork of `croffasia/itsaplan` (remote `upstream`), run as our own instance.
+
+- Never open a PR, issue or comment on `upstream`. When the user asks to push: push to `origin`,
+  `gh pr create --repo MAnasLatif/itsaplan --base main`, squash-merge, delete the branch, pull.
+- No AI attribution in commits, PRs or issues: no `Co-Authored-By` trailer, no "Generated with".
+- Sync with `upstream` by `docs/dev/fork-sync.md`: take its fixes, keep what this fork added and
+  removed. Keep this section when an upstream change edits this file.
+
 ## Rules
 
 - **KISS and YAGNI, no exceptions.** Write the simplest thing that works. Add an abstraction
@@ -32,9 +42,6 @@ Before you change files in an app or package, read its `AGENTS.md`: `apps/api`, 
 
 Run on the new code, in this order, without being asked: `tidy`, `code-review`, `security-audit`.
 Then propose a commit message in chat. Never run `git commit` or `git push` unless the user asks.
-When the user asks to push, do all of it: push the branch to `origin`, open a PR with
-`gh pr create --repo MAnasLatif/itsaplan --base main` (without `--repo` it opens on the upstream
-parent), squash-merge it, delete the branch on GitHub and locally, then switch to `main` and pull.
 
 ## Writing style (docs, comments, commits, chat)
 
