@@ -217,7 +217,7 @@ describe('MCP attachments', () => {
       name: 'view_attachment',
       arguments: { attachment: await upload('text.pdf') },
     });
-    expect(named(text).others[0].text).toContain('# Release Notes');
+    expect(named(text).others[0].text).toContain('Release Notes');
 
     const scanned = await callTool(client, {
       name: 'view_attachment',

@@ -1,4 +1,4 @@
-import ExcelJS from 'exceljs';
+import type ExcelJS from 'exceljs';
 import mammoth from 'mammoth';
 import { HttpError } from '#shared/lib';
 
@@ -41,7 +41,10 @@ function cellText(value: ExcelJS.CellValue): string {
 }
 
 async function parseXlsx(bytes: Buffer): Promise<ParsedSheet> {
-  const workbook = new ExcelJS.Workbook();
+  // Loaded on first use: evaluating exceljs at import costs a Cloudflare Worker part of the
+  // CPU it may spend starting up.
+  const { default: Excel } = await import('exceljs');
+  const workbook = new Excel.Workbook();
   try {
     await workbook.xlsx.load(bytes as unknown as Parameters<typeof workbook.xlsx.load>[0]);
   } catch {
