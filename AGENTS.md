@@ -32,6 +32,9 @@ Before you change files in an app or package, read its `AGENTS.md`: `apps/api`, 
 
 Run on the new code, in this order, without being asked: `tidy`, `code-review`, `security-audit`.
 Then propose a commit message in chat. Never run `git commit` or `git push` unless the user asks.
+When the user asks to push, do all of it: push the branch to `origin`, open a PR with
+`gh pr create --repo MAnasLatif/itsaplan --base main` (without `--repo` it opens on the upstream
+parent), squash-merge it, delete the branch on GitHub and locally, then switch to `main` and pull.
 
 ## Writing style (docs, comments, commits, chat)
 
