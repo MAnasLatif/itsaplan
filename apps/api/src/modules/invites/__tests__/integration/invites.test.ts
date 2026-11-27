@@ -27,7 +27,7 @@ async function setupOwner(): Promise<{
 
 async function configureEmail(owner: ReturnType<typeof authedApi>) {
   const result = await owner.god['email-settings'].put({
-    from: "It's a Plan <noreply@example.com>",
+    from: "It's Anas Plan <noreply@example.com>",
     resend: { enabled: true, apiKey: 're_test_key' },
     allowProjects: false,
   });
@@ -278,10 +278,12 @@ describe('invites', () => {
         })
         .from(notificationDelivery);
       const email = (to: string) => queued.find((row) => row.recipient === to)!.payload;
-      expect(email('newcomer@example.com').subject).toBe("Приглашение в Marketing в It's a Plan");
+      expect(email('newcomer@example.com').subject).toBe(
+        "Приглашение в Marketing в It's Anas Plan",
+      );
       expect(email('newcomer@example.com').text).toContain('с ролью владелец');
       expect(email('newcomer@example.com').html).toContain('class="button"');
-      expect(email(known.email).subject).toBe("Vous êtes invité à Marketing sur It's a Plan");
+      expect(email(known.email).subject).toBe("Vous êtes invité à Marketing sur It's Anas Plan");
     });
 
     it('still creates the link when no email provider is configured', async () => {

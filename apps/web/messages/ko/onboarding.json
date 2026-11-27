@@ -1,5 +1,5 @@
 {
-  "label": "It's a Plan에 오신 것을 환영합니다",
+  "label": "It's Anas Plan에 오신 것을 환영합니다",
   "goTo": "{number}번 슬라이드로 이동",
   "next": "다음",
   "start": "시작하기",
@@ -196,11 +196,11 @@
   },
   "showcase": {
     "title": "회사를 목록에 추가하세요",
-    "body": "로고, 웹사이트, 팀이 It's a Plan에서 어떻게 일하는지 짧은 소개를 보내 주세요. 모든 요청을 검토하며, 로고는 언제든지 내릴 수 있습니다.",
+    "body": "로고, 웹사이트, 팀이 It's Anas Plan에서 어떻게 일하는지 짧은 소개를 보내 주세요. 모든 요청을 검토하며, 로고는 언제든지 내릴 수 있습니다.",
     "open": "회사 추가",
     "dismiss": "괜찮습니다",
     "art": {
-      "heading": "It's a Plan을 사용하는 곳",
+      "heading": "It's Anas Plan을 사용하는 곳",
       "yourLogo": "회사 로고"
     }
   }

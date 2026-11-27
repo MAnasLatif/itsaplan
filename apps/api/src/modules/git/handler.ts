@@ -146,7 +146,7 @@ export async function handleGitEvent(
         origin.key,
         event.repo,
         event.number,
-        `Linked to ${items.length === 1 ? 'an issue' : 'issues'} in It's a Plan:\n\n${items.join('\n')}`,
+        `Linked to ${items.length === 1 ? 'an issue' : 'issues'} in It's Anas Plan:\n\n${items.join('\n')}`,
       );
     } catch {
       // Development linking is the primary action. A revoked provider token must

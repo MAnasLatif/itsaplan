@@ -28,12 +28,12 @@ export const zhTW: EmailLocaleTexts = {
       button: '登入',
     },
     inviteProject: {
-      subject: "你受邀加入 It's a Plan 上的 {project}",
+      subject: "你受邀加入 It's Anas Plan 上的 {project}",
       body: `{inviter} 邀請你以 {role} 身分加入 {project}。\n\n${INVITE_NEXT}`,
       button: '開啟邀請',
     },
     inviteTeam: {
-      subject: "你受邀加入 It's a Plan 上的 {team}",
+      subject: "你受邀加入 It's Anas Plan 上的 {team}",
       body: `{inviter} 邀請你以 {role} 身分加入團隊 {team}。\n\n${INVITE_NEXT}`,
       button: '開啟邀請',
     },
@@ -73,8 +73,8 @@ export const zhTW: EmailLocaleTexts = {
       button: '開啟文件',
     },
     test: {
-      subject: "It's a Plan 電子郵件測試",
-      body: "如果你看得到這封信，表示 It's a Plan 的電子郵件功能正常。",
+      subject: "It's Anas Plan 電子郵件測試",
+      body: "如果你看得到這封信，表示 It's Anas Plan 的電子郵件功能正常。",
       button: '',
     },
   },

@@ -29,12 +29,12 @@ export const tr: EmailLocaleTexts = {
       button: 'Giriş yap',
     },
     inviteProject: {
-      subject: "It's a Plan üzerinde {project} için davet edildiniz",
+      subject: "It's Anas Plan üzerinde {project} için davet edildiniz",
       body: `{inviter} sizi {role} rolüyle {project} projesine davet etti.\n\n${INVITE_NEXT}`,
       button: 'Daveti aç',
     },
     inviteTeam: {
-      subject: "It's a Plan üzerinde {team} için davet edildiniz",
+      subject: "It's Anas Plan üzerinde {team} için davet edildiniz",
       body: `{inviter} sizi {role} rolüyle {team} ekibine davet etti.\n\n${INVITE_NEXT}`,
       button: 'Daveti aç',
     },
@@ -74,8 +74,8 @@ export const tr: EmailLocaleTexts = {
       button: 'Belgeyi aç',
     },
     test: {
-      subject: "It's a Plan e-posta testi",
-      body: "Bunu okuyabiliyorsanız It's a Plan e-postaları çalışıyor.",
+      subject: "It's Anas Plan e-posta testi",
+      body: "Bunu okuyabiliyorsanız It's Anas Plan e-postaları çalışıyor.",
       button: '',
     },
   },

@@ -29,12 +29,12 @@ export const fr: EmailLocaleTexts = {
       button: 'Se connecter',
     },
     inviteProject: {
-      subject: "Vous êtes invité à {project} sur It's a Plan",
+      subject: "Vous êtes invité à {project} sur It's Anas Plan",
       body: `{inviter} vous invite à rejoindre {project} avec le rôle {role}.\n\n${INVITE_NEXT}`,
       button: "Ouvrir l'invitation",
     },
     inviteTeam: {
-      subject: "Vous êtes invité à {team} sur It's a Plan",
+      subject: "Vous êtes invité à {team} sur It's Anas Plan",
       body: `{inviter} vous invite à rejoindre l'équipe {team} avec le rôle {role}.\n\n${INVITE_NEXT}`,
       button: "Ouvrir l'invitation",
     },
@@ -74,8 +74,8 @@ export const fr: EmailLocaleTexts = {
       button: 'Ouvrir le document',
     },
     test: {
-      subject: "Test d'e-mail It's a Plan",
-      body: "Si vous lisez ceci, l'envoi d'e-mails depuis It's a Plan fonctionne.",
+      subject: "Test d'e-mail It's Anas Plan",
+      body: "Si vous lisez ceci, l'envoi d'e-mails depuis It's Anas Plan fonctionne.",
       button: '',
     },
   },

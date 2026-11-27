@@ -21,7 +21,7 @@ function config(overrides: Partial<EmailConfig> = {}): EmailConfig {
       timeout: null,
     },
     resend: { enabled: false, apiKey: '' },
-    from: "It's a Plan <noreply@plan.example>",
+    from: "It's Anas Plan <noreply@plan.example>",
     ...overrides,
   };
 }
@@ -53,7 +53,7 @@ describe('Cloudflare Email Service', () => {
     setCloudflareEmail(mail.binding);
     expect(await sendEmail(config(), message)).toEqual({ ok: true });
     expect(mail.sent).toEqual([
-      { ...message, from: { name: "It's a Plan", email: 'noreply@plan.example' } },
+      { ...message, from: { name: "It's Anas Plan", email: 'noreply@plan.example' } },
     ]);
   });
 

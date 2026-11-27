@@ -145,7 +145,7 @@ export const app = new Elysia(
           scalar: { theme: 'default', customCss: '' } as ElysiaOpenAPIConfig['scalar'],
           documentation: {
             info: {
-              title: "It's a Plan API",
+              title: "It's Anas Plan API",
               version: pkg.version,
               description: apiDescription,
             },
@@ -407,7 +407,7 @@ export const app = new Elysia(
     },
   })
   // Root doubles as the liveness/health endpoint.
-  .get('/', () => ({ name: "It's a Plan api", status: 'ok' }), {
+  .get('/', () => ({ name: "It's Anas Plan api", status: 'ok' }), {
     detail: {
       tags: ['System'],
       summary: 'Check that the api is up',

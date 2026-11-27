@@ -1,5 +1,5 @@
 {
-  "label": "Benvenuto in It's a Plan",
+  "label": "Benvenuto in It's Anas Plan",
   "goTo": "Vai alla diapositiva {number}",
   "next": "Avanti",
   "start": "Inizia",
@@ -196,11 +196,11 @@
   },
   "showcase": {
     "title": "Aggiungi la tua azienda all'elenco",
-    "body": "Invia il logo, il sito web e qualche parola su come il tuo team lavora in It's a Plan. Controlliamo ogni richiesta e puoi rimuovere il logo in qualsiasi momento.",
+    "body": "Invia il logo, il sito web e qualche parola su come il tuo team lavora in It's Anas Plan. Controlliamo ogni richiesta e puoi rimuovere il logo in qualsiasi momento.",
     "open": "Aggiungi la mia azienda",
     "dismiss": "No, grazie",
     "art": {
-      "heading": "Chi usa It's a Plan",
+      "heading": "Chi usa It's Anas Plan",
       "yourLogo": "Il tuo logo"
     }
   }

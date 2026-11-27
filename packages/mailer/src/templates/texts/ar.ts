@@ -29,12 +29,12 @@ export const ar: EmailLocaleTexts = {
       button: 'تسجيل الدخول',
     },
     inviteProject: {
-      subject: "عندك دعوة لـ {project} على It's a Plan",
+      subject: "عندك دعوة لـ {project} على It's Anas Plan",
       body: `{inviter} دعاك تنضم لـ {project} بدور {role}.\n\n${INVITE_NEXT}`,
       button: 'افتح الدعوة',
     },
     inviteTeam: {
-      subject: "عندك دعوة لـ {team} على It's a Plan",
+      subject: "عندك دعوة لـ {team} على It's Anas Plan",
       body: `{inviter} دعاك تنضم للفريق {team} بدور {role}.\n\n${INVITE_NEXT}`,
       button: 'افتح الدعوة',
     },
@@ -74,8 +74,8 @@ export const ar: EmailLocaleTexts = {
       button: 'افتح المستند',
     },
     test: {
-      subject: "اختبار بريد It's a Plan",
-      body: "لو قريت الرسالة دي، يبقى البريد من It's a Plan شغّال.",
+      subject: "اختبار بريد It's Anas Plan",
+      body: "لو قريت الرسالة دي، يبقى البريد من It's Anas Plan شغّال.",
       button: '',
     },
   },

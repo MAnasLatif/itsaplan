@@ -59,3 +59,6 @@ keeps every change listed below. Nothing goes back to upstream.
 | `Bun.file` for MIME types in the worker | `mime-types` | no Bun on Workers |
 | telemetry from every worker | no telemetry from Workers (`apps/worker/src/telemetry.ts`) | the collector refuses a Workers runtime |
 | Telegram bot | not deployed; its code stays | we do not use it |
+| "Upgrade to Pro" button at the bottom of the app sidebar | `apps/web/src/ce/SidebarFooterAction.tsx` renders nothing | we do not want it |
+| Pro previews of agent workflows and forms in the project sections | `apps/web/src/ce/useProjectSettingsSections.ts` returns the core sections only; the preview components stay unused | they cannot be turned on here |
+| The product name "It's a Plan" | "It's Anas Plan" in every string people see: the web (`APP_NAME`, messages in every language, manifest, `public/sw.js`, the sidebar footer), the email texts in `packages/mailer`, the API docs title, the MCP title and instructions, the passkey name. Identifiers keep `itsaplan`: package and Worker names, cookies, `X-Itsaplan-*` headers, the `itp_` key prefix, the MCP `name`. After a sync, search for `It's a Plan` and replace new strings too | our own instance |

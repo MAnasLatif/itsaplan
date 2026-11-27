@@ -29,12 +29,12 @@ export const fa: EmailLocaleTexts = {
       button: 'ورود',
     },
     inviteProject: {
-      subject: "شما به {project} در It's a Plan دعوت شده‌اید",
+      subject: "شما به {project} در It's Anas Plan دعوت شده‌اید",
       body: `{inviter} شما را با نقش {role} به {project} دعوت کرده است.\n\n${INVITE_NEXT}`,
       button: 'باز کردن دعوت‌نامه',
     },
     inviteTeam: {
-      subject: "شما به {team} در It's a Plan دعوت شده‌اید",
+      subject: "شما به {team} در It's Anas Plan دعوت شده‌اید",
       body: `{inviter} شما را با نقش {role} به تیم {team} دعوت کرده است.\n\n${INVITE_NEXT}`,
       button: 'باز کردن دعوت‌نامه',
     },
@@ -74,8 +74,8 @@ export const fa: EmailLocaleTexts = {
       button: 'باز کردن سند',
     },
     test: {
-      subject: "آزمایش ایمیل It's a Plan",
-      body: "اگر این را می‌خوانید، ایمیل It's a Plan کار می‌کند.",
+      subject: "آزمایش ایمیل It's Anas Plan",
+      body: "اگر این را می‌خوانید، ایمیل It's Anas Plan کار می‌کند.",
       button: '',
     },
   },
