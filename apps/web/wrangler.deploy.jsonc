@@ -1,0 +1,34 @@
+// Deploys the Cloudflare build of the web (`bun run deploy:cloudflare`) with Wrangler, like
+// apps/api and apps/worker. The file name keeps the Cloudflare Vite plugin from reading it:
+// cloudflare.config.ts drives `vite dev` and the build, this file the deploy. The script
+// copies it into the build output and deploys from there, so its paths are relative to
+// .cloudflare/output/v1/workers/default. Next to that output Wrangler would stop and ask
+// for the `cf` CLI; this file names the Worker itself.
+{
+  "name": "itsaplan-web",
+  "account_id": "f235a03eb3da7318d97d1b9334e3fb52",
+  "main": "bundle/index.js",
+  "compatibility_date": "2026-06-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "observability": { "enabled": true },
+  "upload_source_maps": false,
+  "minify": true,
+  "workers_dev": false,
+  // The whole host; the api's routes under /api and /.well-known are more specific.
+  "routes": [{ "pattern": "plan.anaslatif.dev/*", "zone_name": "anaslatif.dev" }],
+  "assets": {
+    "directory": "assets",
+    "binding": "ASSETS",
+    "html_handling": "none",
+    "not_found_handling": "none",
+    "run_worker_first": ["/*", "!/_next/static/*", "!/*/_next/static/*"],
+  },
+  "vars": {
+    "API_URL": "https://plan.anaslatif.dev/api",
+    // The api's workers.dev address. A Worker's fetch to another Worker's route on the
+    // same zone does not reach it, so server-side reads go here instead of API_URL.
+    "SERVICE_URL_API": "https://itsaplan-api.kharid-hub.workers.dev",
+    "PRIVACY_URL": "",
+    "TERMS_URL": "",
+  },
+}

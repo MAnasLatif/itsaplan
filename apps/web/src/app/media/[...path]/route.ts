@@ -1,4 +1,5 @@
 import { serverRuntimeEnv } from '@/utils/runtimeEnv';
+import { fetchWithoutRedirect } from '@/utils/fetchWithoutRedirect';
 
 // Avatars and attachments live on the api, on another origin. Serving them through
 // the web origin makes them local images for next/image: `images.remotePatterns` is
@@ -52,11 +53,10 @@ export async function GET(request: Request, { params }: { params: Promise<{ path
   // reached by service name, which is what SERVICE_URL_API carries (as for the worker).
   const origin = process.env.SERVICE_URL_API || serverRuntimeEnv().apiUrl;
   const { search } = new URL(request.url);
-  const response = await fetch(`${origin}/${upstream}${search}`, {
+  const response = await fetchWithoutRedirect(`${origin}/${upstream}${search}`, {
     // The api answers 304 to it, and passing it on keeps a cached avatar cached.
     headers: forwardedHeaders(request),
     cache: 'no-store',
-    redirect: 'error',
   });
 
   const headers = new Headers();

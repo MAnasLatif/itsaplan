@@ -21,6 +21,8 @@ Before you change files in an app or package, read its `AGENTS.md`: `apps/api`, 
   calls the API over HTTP for everything else. `@repo/editor` also runs in the browser, so it uses
   no Bun or Node APIs. Dependencies run `api → @repo/auth → @repo/db → @repo/crypto`.
 - A server-side fetch of a supplied URL goes through `@repo/net`, the SSRF guard.
+- api, worker and the packages they import also run on Cloudflare Workers (`docs/cloudflare.md`): no
+  Bun APIs there, and no I/O, timer or query on `db` at module scope.
 - Never skip the pre-commit hook with `--no-verify`. It runs `eslint --fix` and `prettier --write`.
 - Minimum comments. A comment says why; the code says what. No comment longer than its code, none
   on layout or styling. Change or delete a comment in the same edit as its code. Full rules are
@@ -30,6 +32,9 @@ Before you change files in an app or package, read its `AGENTS.md`: `apps/api`, 
 
 Run on the new code, in this order, without being asked: `tidy`, `code-review`, `security-audit`.
 Then propose a commit message in chat. Never run `git commit` or `git push` unless the user asks.
+When the user asks to push, do all of it: push the branch to `origin`, open a PR with
+`gh pr create --repo MAnasLatif/itsaplan --base main` (without `--repo` it opens on the upstream
+parent), squash-merge it, delete the branch on GitHub and locally, then switch to `main` and pull.
 
 ## Writing style (docs, comments, commits, chat)
 
@@ -118,7 +123,7 @@ Read the doc for what your task touches:
 | imports                                       | `docs/dev/import-worker.md`, `docs/dev/{linear,trello,plane}-import.md` |
 | migrations in deploys, backups                | `docs/dev/deploy-stack.md`                                           |
 | commit types, versions, release config        | `docs/dev/releasing.md`                                              |
-| self-hosting, Coolify, Railway, Helm          | `docs/self-hosting.md`, `docs/coolify.md`, `docs/railway.md`, `docs/helm.md` |
+| self-hosting, Coolify, Railway, Helm, Cloudflare | `docs/self-hosting.md`, `docs/coolify.md`, `docs/railway.md`, `docs/helm.md`, `docs/cloudflare.md` |
 | the runner, external agents, MCP results      | `docs/runner.md`, `docs/agent-endpoint.md`, `docs/mcp-results.md`    |
 
 ## Changing an AGENTS.md

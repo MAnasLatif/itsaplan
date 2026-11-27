@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "bun --env-file=../../.env run --watch src/index.ts",
     "start": "bun run src/index.ts",
+    "deploy:cloudflare": "wrangler deploy",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "test": "bun test --env-file=../../.env.test"
@@ -17,12 +18,15 @@
     "@repo/net": "workspace:*",
     "@repo/storage": "workspace:*",
     "croner": "^10.0.1",
-    "drizzle-orm": "^0.45.4"
+    "drizzle-orm": "^0.45.4",
+    "mime-types": "3"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
     "@types/bun": "latest",
+    "@types/mime-types": "3",
     "eslint": "^9.39.0",
-    "typescript": "^6.0.3"
+    "typescript": "^6.0.3",
+    "wrangler": "4"
   }
 }

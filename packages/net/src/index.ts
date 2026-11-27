@@ -203,6 +203,12 @@ export interface PinnedRequestInit extends UrlPolicy {
   truncateBody?: boolean;
 }
 
+// Inside a Cloudflare Worker, node:http runs on fetch and cannot connect to a chosen
+// address, so there is no pin. A Worker's request leaves from Cloudflare's network, where
+// no private network or metadata endpoint of this instance is reachable; the checks in
+// `vet` still run first.
+const onWorkers = globalThis.navigator?.userAgent === 'Cloudflare-Workers';
+
 // Validates the URL, then connects to the address that validation resolved instead of
 // resolving the hostname a second time. Without the pin, a name that answers publicly
 // during the check and privately during the connection (DNS rebinding) would defeat
@@ -220,6 +226,7 @@ export async function pinnedFetch(raw: string, init: PinnedRequestInit = {}): Pr
   if (!Object.keys(headers).some((name) => name.toLowerCase() === 'user-agent')) {
     headers['user-agent'] = DEFAULT_USER_AGENT;
   }
+  if (onWorkers) return workersFetch(url, init, headers);
 
   return new Promise<Response>((resolve, reject) => {
     const req = send(
@@ -291,4 +298,64 @@ export async function pinnedFetch(raw: string, init: PinnedRequestInit = {}): Pr
     }
     req.end(init.body);
   });
+}
+
+// pinnedFetch on Cloudflare Workers, with the same contract as the node request above:
+// no redirect is followed, the timeout and the byte limit apply, and an abort or a
+// timeout fails with the same message.
+async function workersFetch(
+  url: URL,
+  init: PinnedRequestInit,
+  headers: Record<string, string>,
+): Promise<Response> {
+  const timeout = init.timeoutMs ? AbortSignal.timeout(init.timeoutMs) : undefined;
+  const signals = [init.signal, timeout].filter((s): s is AbortSignal => s !== undefined);
+  try {
+    return await fetchAndRead(url, init, headers, signals);
+  } catch (error) {
+    if (timeout?.aborted) throw new Error('request timed out');
+    if (init.signal?.aborted) throw new Error('request aborted');
+    throw error;
+  }
+}
+
+async function fetchAndRead(
+  url: URL,
+  init: PinnedRequestInit,
+  headers: Record<string, string>,
+  signals: AbortSignal[],
+): Promise<Response> {
+  const res = await fetch(url, {
+    method: init.method ?? 'GET',
+    headers,
+    body: typeof init.body === 'string' ? init.body : init.body && new Uint8Array(init.body),
+    redirect: 'manual',
+    signal: signals.length > 0 ? AbortSignal.any(signals) : undefined,
+  });
+  if (res.status < 200 || res.status > 599) throw new Error('response has an invalid HTTP status');
+  // fetch decodes a compressed body, so its encoding and length no longer describe it.
+  const responseHeaders = new Headers(res.headers);
+  responseHeaders.delete('content-encoding');
+  responseHeaders.delete('content-length');
+  if (!res.body || res.status === 204 || res.status === 205 || res.status === 304) {
+    await res.body?.cancel();
+    return new Response(null, { status: res.status, headers: responseHeaders });
+  }
+
+  const chunks: Uint8Array[] = [];
+  let bytes = 0;
+  const reader = res.body.getReader();
+  for (;;) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    if (init.maxBytes !== undefined && bytes + value.length > init.maxBytes) {
+      await reader.cancel();
+      if (!init.truncateBody) throw new ResponseTooLargeError('response exceeds the byte limit');
+      chunks.push(value.subarray(0, init.maxBytes - bytes));
+      break;
+    }
+    bytes += value.length;
+    chunks.push(value);
+  }
+  return new Response(Buffer.concat(chunks), { status: res.status, headers: responseHeaders });
 }

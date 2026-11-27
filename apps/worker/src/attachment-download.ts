@@ -1,5 +1,6 @@
 import { pinnedFetch, ResponseTooLargeError } from '@repo/net';
 import { SourceRateLimitedError, type AttachmentDownload } from './reader';
+import { lookup } from 'mime-types';
 
 // An attachment that cannot be stored: over this instance's size, type or quota
 // limits, or a download that did not return the file. The Attachments phase logs
@@ -112,7 +113,7 @@ export async function resolveDownloadRedirects(
 }
 
 export function contentTypeForFilename(filename: string): string {
-  return Bun.file(filename).type.split(';')[0]!;
+  return lookup(filename) || 'application/octet-stream';
 }
 
 // The Attachments phase reuses a file already on the issue under the same name, so

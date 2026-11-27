@@ -110,8 +110,23 @@ describe('public media proxy', () => {
     );
     assert.equal(capturedInput, `http://api:3000/attachments/${PUBLIC_ID}/raw?download=1`);
     assert.deepEqual(capturedInit?.headers, { 'if-none-match': 'v0' });
-    assert.equal(capturedInit?.redirect, 'error');
+    assert.equal(capturedInit?.redirect, 'manual');
     assert.equal(response.headers.get('content-type'), 'image/png');
     assert.equal(response.headers.get('x-private'), null);
+  });
+
+  it('refuses a redirect from the API instead of following it', async () => {
+    process.env.SERVICE_URL_API = 'http://api:3000';
+    globalThis.fetch = (async () =>
+      new Response(null, {
+        status: 302,
+        headers: { location: 'https://elsewhere.test/x' },
+      })) as unknown as typeof fetch;
+    await assert.rejects(
+      GET(new Request('https://plan.test/media/example'), {
+        params: Promise.resolve({ path: ['attachments', PUBLIC_ID, 'raw'] }),
+      }),
+      /redirect/,
+    );
   });
 });

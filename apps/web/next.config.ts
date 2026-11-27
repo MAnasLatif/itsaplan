@@ -34,8 +34,9 @@ const SECURITY_HEADERS = [
 ];
 
 const nextConfig: NextConfig = {
-  // standalone build for a lean docker image.
-  output: 'standalone',
+  // standalone build for a lean docker image. The Cloudflare build (vinext, see
+  // vite.config.ts) bundles its own Worker and sets WEB_TARGET=cloudflare.
+  output: process.env.WEB_TARGET === 'cloudflare' ? undefined : 'standalone',
   poweredByHeader: false,
   allowedDevOrigins: devAllowedOrigins,
   // No page may be framed, except the public ones (/share, /p) on the sites the instance

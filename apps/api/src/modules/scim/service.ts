@@ -24,6 +24,7 @@ import {
   sql,
   type Column,
 } from 'drizzle-orm';
+import { QueryBuilder } from 'drizzle-orm/pg-core';
 import { generateUsername } from '@repo/auth';
 import { iso } from '#shared/lib';
 import { deleteAccount } from '#shared/account-deletion';
@@ -61,9 +62,10 @@ export const USER_FILTER_ATTRIBUTES = ['userName', 'externalId', 'emails.value']
 export const GROUP_FILTER_ATTRIBUTES = ['displayName', 'externalId'];
 
 // True for every account that is not an AI agent's bot user. The same test the god
-// user directory uses for its `human` filter.
+// user directory uses for its `human` filter. Built once at import, so it uses a query
+// builder that needs no database connection.
 const notAnAgent = notExists(
-  db
+  new QueryBuilder()
     .select({ n: sql`1` })
     .from(aiAgent)
     .where(eq(aiAgent.userId, user.id)),

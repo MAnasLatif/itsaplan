@@ -28,6 +28,54 @@ export function startBackgroundJobs(): void {
   startLoop('agent-traces', pruneTraces, (jobs) => minutes(jobs.sweeps.tracePruneMinutes));
 }
 
+// The jobs on Cloudflare Workers, where a Cron Trigger fires once a minute in place of the
+// loops. A sweep runs on each minute that is a multiple of its interval, so a change in god
+// mode applies from the next minute without any stored state. Agent invocations are sent at
+// their interval for most of the minute. Agent runs are not drained here: internal agents do
+// not run on Workers yet (docs/cloudflare.md).
+export async function runScheduledJobs(scheduledTime: number): Promise<void> {
+  await Promise.all([
+    runScheduledSweeps(scheduledTime),
+    sendInvocationsUntil(scheduledTime + PASS_MS),
+  ]);
+}
+
+// Leaves a few seconds before the next trigger, so two passes rarely overlap.
+const PASS_MS = 55_000;
+
+async function runScheduledSweeps(scheduledTime: number): Promise<void> {
+  const { sweeps } = await getJobSettings();
+  const minute = Math.floor(scheduledTime / 60_000);
+  const jobs: [string, () => Promise<void>, number][] = [
+    ['auto-archive', autoArchive, sweeps.autoArchiveMinutes],
+    ['share-expiry', expireShares, sweeps.shareExpiryMinutes],
+    ['agent-traces', pruneTraces, sweeps.tracePruneMinutes],
+  ];
+  await Promise.all(
+    jobs
+      .filter(([, , every]) => minute % every === 0)
+      .map(([name, job]) =>
+        job().catch((error: unknown) => console.error(`[background] ${name} failed:`, error)),
+      ),
+  );
+}
+
+// Awaited, unlike sendInvocations: the pass has to outlast its sends. An agent still being
+// sent its work is skipped by the next dispatch, so a slow endpoint holds back no other.
+async function sendInvocationsUntil(until: number): Promise<void> {
+  while (Date.now() < until) {
+    await dispatchInvocations().catch((error: unknown) =>
+      console.error('[background] agent-invocations failed:', error),
+    );
+    const delay = await nextDelay(
+      'agent-invocations',
+      (jobs) => jobs.agentInvocations.pollIntervalMs,
+    );
+    const wait = Math.min(delay, until - Date.now());
+    if (wait > 0) await new Promise((resolve) => setTimeout(resolve, wait));
+  }
+}
+
 function minutes(value: number): number {
   return value * 60_000;
 }

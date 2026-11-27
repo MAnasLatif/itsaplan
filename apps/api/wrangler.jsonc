@@ -1,0 +1,63 @@
+{
+  "$schema": "../../node_modules/wrangler/config-schema.json",
+  "name": "itsaplan-api",
+  "main": "src/worker.ts",
+  "compatibility_date": "2026-06-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "account_id": "f235a03eb3da7318d97d1b9334e3fb52",
+  "observability": { "enabled": true },
+  // Runs the api near the database rather than near the visitor: a request makes several
+  // queries in a row, and each one crosses the distance to Postgres.
+  "placement": { "mode": "smart" },
+  // The api's source maps are over the 60 MiB upload limit.
+  "upload_source_maps": false,
+  // A smaller script parses faster, and Workers bound the CPU time of startup.
+  "minify": true,
+  // Mastra is left out of the Worker: see src/cloudflare/mastra.ts.
+  "alias": {
+    "@mastra/core": "./src/cloudflare/mastra.ts",
+    "@mastra/core/agent": "./src/cloudflare/mastra.ts",
+    "@mastra/core/llm": "./src/cloudflare/mastra.ts",
+    "@mastra/core/tools": "./src/cloudflare/mastra.ts",
+    "@mastra/core/observability": "./src/cloudflare/mastra.ts",
+    "@mastra/memory": "./src/cloudflare/mastra.ts",
+    "@mastra/pg": "./src/cloudflare/mastra.ts",
+    "@mastra/observability": "./src/cloudflare/mastra.ts",
+  },
+  // The web serves plan.anaslatif.dev; these more specific routes reach the api. The
+  // prefix is removed in src/worker.ts. The web reads the api through workers.dev.
+  "workers_dev": true,
+  "routes": [
+    { "pattern": "plan.anaslatif.dev/api/*", "zone_name": "anaslatif.dev" },
+    {
+      "pattern": "plan.anaslatif.dev/.well-known/oauth-authorization-server*",
+      "zone_name": "anaslatif.dev",
+    },
+    {
+      "pattern": "plan.anaslatif.dev/.well-known/oauth-protected-resource*",
+      "zone_name": "anaslatif.dev",
+    },
+    {
+      "pattern": "plan.anaslatif.dev/.well-known/openid-configuration*",
+      "zone_name": "anaslatif.dev",
+    },
+  ],
+  // This instance's public values. Secrets are set with `wrangler secret put`.
+  "vars": {
+    "API_URL": "https://plan.anaslatif.dev/api",
+    "APP_URL": "https://plan.anaslatif.dev",
+    "EMAIL_FROM": "It's a Plan <noreply@plan.anaslatif.dev>",
+    // Cloudflare sets this header at its edge and replaces any value a client sends.
+    "CLIENT_IP_HEADER": "cf-connecting-ip",
+  },
+  // runScheduledJobs in src/background.ts: the sweeps and the agent invocations.
+  "triggers": { "crons": ["* * * * *"] },
+  "hyperdrive": [
+    {
+      "binding": "HYPERDRIVE",
+      "id": "60b0bdd2b15b4489bf1fd394941bd353",
+      "localConnectionString": "postgres://itsaplan:itsaplan@localhost:5432/itsaplan",
+    },
+  ],
+  "send_email": [{ "name": "EMAIL" }],
+}

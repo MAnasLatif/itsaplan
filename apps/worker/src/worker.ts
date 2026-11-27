@@ -2,7 +2,7 @@ import { getJobSettings, type JobSettings } from '@repo/db';
 import { deliver } from './delivery';
 import { processNotificationDeliveries } from './notification-delivery';
 import { equalJitterBackoffMs } from './backoff';
-import { startPollLoop, type WorkerHandle } from './poll-loop';
+import { startPollLoop, type PollLoop, type WorkerHandle } from './poll-loop';
 import { TELEMETRY_CHECK_EVERY_TICKS, processTelemetry } from './telemetry';
 import {
   type ClaimedDelivery,
@@ -18,8 +18,14 @@ let lastCleanupAt = Date.now();
 // Starts due, so an install is visible even if the instance is removed minutes later.
 let ticksSinceTelemetry = TELEMETRY_CHECK_EVERY_TICKS;
 
+export const deliveryLoop: PollLoop = {
+  name: 'worker',
+  tick,
+  intervalMs: (jobs) => jobs.webhooks.pollIntervalMs,
+};
+
 export function startWorker(): WorkerHandle {
-  return startPollLoop('worker', tick, (jobs) => jobs.webhooks.pollIntervalMs);
+  return startPollLoop(deliveryLoop);
 }
 
 // One poll: claim a batch of due deliveries, send them concurrently, record each

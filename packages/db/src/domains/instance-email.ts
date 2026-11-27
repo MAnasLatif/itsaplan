@@ -1,4 +1,5 @@
 import {
+  hasCloudflareEmail,
   hasEmailProvider,
   type EmailConfig,
   type ResendConfig,
@@ -43,10 +44,12 @@ export function defaultInstanceEmailConfig(): InstanceEmailConfig {
   };
 }
 
-// The stored config, or null when nothing has been saved.
+// The stored config, or null when nothing has been saved. On Cloudflare Workers with an
+// Email Service binding an instance sends mail before anything is saved, so the default
+// config stands in for a missing one there.
 export async function getInstanceEmailConfig(): Promise<InstanceEmailConfig | null> {
   const stored = await readSecret<InstanceEmailConfig>(INSTANCE_EMAIL_SECRET_KEY);
-  if (!stored) return null;
+  if (!stored) return hasCloudflareEmail() ? defaultInstanceEmailConfig() : null;
   // Merge over the default so a config written before a field was added stays valid.
   return { ...defaultInstanceEmailConfig(), ...stored };
 }

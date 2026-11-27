@@ -139,6 +139,9 @@ better-auth sessions. Nothing is mocked. Import `app` via the helpers, never `sr
 
 ## Rules
 
+- On Cloudflare Workers Elysia runs without code generation and reads every body before the
+  handler. A handler that passes `request` to a library that reads the body takes
+  `unreadRequest(request)`, and `forApp` in `src/worker.ts` must keep a copy for its path.
 - Auth logic is in `@repo/auth`, DB access via `@repo/db`. Do not re-instantiate either.
 - A state-changing request with the session cookie must come from a trusted origin; the
   `onRequest` guard in `app.ts` refuses the rest with 403 `CSRF_ORIGIN_REJECTED`.

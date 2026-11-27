@@ -44,3 +44,9 @@ coverage
 
 # agent scratch space (test docs, drafts)
 .workspace/
+
+# Cloudflare Workers: local secrets, local state and build output
+.dev.vars
+.wrangler/
+.cloudflare/
+.vinext/
