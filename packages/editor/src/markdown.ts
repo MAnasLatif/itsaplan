@@ -68,10 +68,7 @@ export function markdownToDocumentJson(
   window: { DOMParser: typeof globalThis.DOMParser },
 ): Record<string, unknown> {
   const parseBody = (html: string) =>
-    new window.DOMParser().parseFromString(
-      `<!doctype html><html><body>${html}</body></html>`,
-      'text/html',
-    ).body;
+    new window.DOMParser().parseFromString(`<body>${html}</body>`, 'text/html').body;
   const body = parseBody(markdown.render(content));
   body.innerHTML = body.innerHTML.replace(/\n<\/code><\/pre>/g, '</code></pre>');
   splitTaskLists(body);
@@ -79,7 +76,7 @@ export function markdownToDocumentJson(
     const input = item.querySelector('input');
     item.setAttribute('data-type', 'taskItem');
     if (input) {
-      item.setAttribute('data-checked', String(input.hasAttribute('checked')));
+      item.setAttribute('data-checked', String(input.checked));
       input.remove();
     }
   }

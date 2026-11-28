@@ -1,5 +1,4 @@
 import { serverRuntimeEnv } from '@/utils/runtimeEnv';
-import { fetchWithoutRedirect } from '@/utils/fetchWithoutRedirect';
 
 // The calendar feed for a public shared view. Calendar apps subscribe to the web
 // origin, so the api's public feed is served through here like the share pages.
@@ -15,8 +14,9 @@ export async function GET(_request: Request, { params }: { params: Promise<{ tok
   if (!SHARE_TOKEN.test(token)) return new Response(null, { status: 404 });
 
   const origin = process.env.SERVICE_URL_API || serverRuntimeEnv().apiUrl;
-  const upstream = await fetchWithoutRedirect(`${origin}/share/view/${token}/calendar.ics`, {
+  const upstream = await fetch(`${origin}/share/view/${token}/calendar.ics`, {
     cache: 'no-store',
+    redirect: 'error',
   });
 
   const headers = new Headers();

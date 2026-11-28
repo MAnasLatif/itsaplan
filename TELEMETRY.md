@@ -29,9 +29,6 @@ DO_NOT_TRACK=1
 Any value except `0` (and an empty one) turns telemetry off. Nothing is sent after
 that, and no instance id is generated.
 
-A worker on Cloudflare Workers sends nothing either: the snapshot describes a Bun runtime,
-and Workers run none.
-
 ## Seeing what is sent
 
 ```bash

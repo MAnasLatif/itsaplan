@@ -21,7 +21,7 @@ import {
   rawAttachmentQuery,
   uploadChatAttachmentBody,
 } from './model';
-import { pdfToText } from './pdf';
+import { pdfToMarkdown } from './pdf';
 import {
   createChatAttachment,
   getChatAttachmentByPublicId,
@@ -86,13 +86,13 @@ export const chatAttachmentRoutes = new Elysia({
         body.contentType || EXTENSION_TYPES[extension] || 'application/octet-stream';
       await assertAttachmentUploadAllowed(project.id, bytes.length, contentType);
 
-      // A PDF is stored as the text it holds: the original is discarded, so the
-      // row, the download link, and the agent all see text.
+      // A PDF is stored as the Markdown it converts to: the original is
+      // discarded, so the row, the download link, and the agent all see text.
       let content = bytes;
       if (/\.pdf$/i.test(filename) || contentType === 'application/pdf') {
-        content = Buffer.from(await pdfToText(bytes), 'utf8');
-        filename = filename.replace(/\.pdf$/i, '') + '.txt';
-        contentType = 'text/plain';
+        content = Buffer.from(await pdfToMarkdown(bytes), 'utf8');
+        filename = filename.replace(/\.pdf$/i, '') + '.md';
+        contentType = 'text/markdown';
         await assertAttachmentUploadAllowed(project.id, content.length, contentType);
       }
 

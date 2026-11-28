@@ -54,10 +54,7 @@ function optedOut(value: string | undefined): boolean {
   return value !== undefined && value !== '' && value !== '0';
 }
 
-// The pulse describes a Bun runtime, and the collector refuses one from Cloudflare
-// Workers, so a worker there sends nothing (TELEMETRY.md).
 function telemetryEnabled(): boolean {
-  if (!process.versions.bun) return false;
   return !optedOut(process.env.TELEMETRY_DISABLED) && !optedOut(process.env.DO_NOT_TRACK);
 }
 
@@ -437,7 +434,7 @@ export async function processTelemetry(): Promise<void> {
     installedDay: await installedDay(),
     version: pkg.version,
     build: buildName(),
-    bunVersion: process.versions.bun!,
+    bunVersion: Bun.version,
     docker: existsSync('/.dockerenv'),
     platform: `${process.platform}/${process.arch}`,
     postgresMajor: await postgresMajor(),

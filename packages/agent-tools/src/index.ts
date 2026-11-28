@@ -24,4 +24,3 @@ export {
   coerceConfig,
   redactConfig,
 } from './registry';
-export { extractPdfText, type PdfText } from './tools/pdf/extract';

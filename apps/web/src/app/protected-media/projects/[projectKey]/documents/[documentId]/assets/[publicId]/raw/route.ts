@@ -1,5 +1,4 @@
 import { serverRuntimeEnv } from '@/utils/runtimeEnv';
-import { fetchWithoutRedirect } from '@/utils/fetchWithoutRedirect';
 
 // This route deliberately has a fixed shape. Unlike the public /media proxy it
 // forwards the session cookie, so accepting an arbitrary upstream path here would
@@ -33,11 +32,12 @@ export async function GET(request: Request, { params }: { params: Promise<RouteP
   if (!cookie) return new Response(null, { status: 401 });
 
   const origin = process.env.SERVICE_URL_API || serverRuntimeEnv().apiUrl;
-  const upstream = await fetchWithoutRedirect(
+  const upstream = await fetch(
     `${origin}/projects/${encodeURIComponent(projectKey)}/documents/${documentId}/assets/${publicId}/raw`,
     {
       headers: forwardedHeaders(request, cookie),
       cache: 'no-store',
+      redirect: 'error',
     },
   );
 

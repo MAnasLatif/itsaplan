@@ -1,4 +1,4 @@
-export { db, runWithDb, type DbExecutor } from './client';
+export { db, type DbExecutor } from './client';
 export * from './schema';
 export * from './permissions';
 export { getSetting, getOrCreateSetting, setSetting } from './settings';

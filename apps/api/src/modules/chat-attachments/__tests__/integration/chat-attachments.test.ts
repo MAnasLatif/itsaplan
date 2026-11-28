@@ -86,20 +86,20 @@ describe('chat attachments', () => {
     expect(read.data!.text).toBe('# Spec\n\nThe body.');
   });
 
-  it('stores a text PDF as the text it holds', async () => {
+  it('stores a text PDF as the markdown it converts to', async () => {
     const { asOwner } = await setup();
     const uploaded = await uploadPdf(asOwner, 'text.pdf');
     expect(uploaded.status).toBe(201);
     expect(uploaded.data).toMatchObject({
-      filename: 'text.txt',
-      contentType: 'text/plain',
+      filename: 'text.md',
+      contentType: 'text/markdown',
     });
 
     const read = await asOwner['chat-attachments']({ publicId: uploaded.data!.id }).get();
-    expect(read.data!.text).toContain('Release Notes');
+    expect(read.data!.text).toContain('# Release Notes');
     expect(read.data!.text).toContain('accepts documents as well as spreadsheets');
 
-    // The public link serves the text, not the discarded PDF.
+    // The public link serves the markdown, not the discarded PDF.
     const raw = await api['chat-attachments']({ publicId: uploaded.data!.id }).raw.get({
       query: { download: '1' },
     });

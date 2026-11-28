@@ -3,7 +3,7 @@ import { eq, sql } from 'drizzle-orm';
 import { HttpError, iso, num } from '#shared/lib';
 import { getObject } from '@repo/storage';
 import { isTableFilename, parseImportFile } from './parse';
-import { pdfToText } from './pdf';
+import { pdfToMarkdown } from './pdf';
 import {
   assertAttachmentStorageCapacity,
   lockAttachmentStorage,
@@ -126,7 +126,7 @@ export async function readAttachmentContent(row: StoredFile): Promise<Attachment
       },
     };
   }
-  if (isPdf(row)) return { text: await pdfToText(bytes) };
+  if (isPdf(row)) return { text: await pdfToMarkdown(bytes) };
   return { text: bytes.toString('utf8') };
 }
 
