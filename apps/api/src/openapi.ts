@@ -1,6 +1,6 @@
-import type { ElysiaOpenAPIConfig } from '@elysiajs/openapi';
+import type { ElysiaSwaggerConfig } from '@elysiajs/swagger';
 
-type OpenApiDocument = NonNullable<ElysiaOpenAPIConfig['documentation']>;
+type OpenApiDocument = NonNullable<ElysiaSwaggerConfig['documentation']>;
 type Paths = NonNullable<OpenApiDocument['paths']>;
 type PathItem = NonNullable<Paths[string]>;
 type Operation = NonNullable<PathItem['get']>;
@@ -33,10 +33,6 @@ const GIT_WEBHOOK_SECURITY: NonNullable<Operation['security']> = [
   { bitbucketSignature: [] },
 ];
 
-function isEmpty(value: object | undefined): boolean {
-  return !value || Object.keys(value).length === 0;
-}
-
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
@@ -66,36 +62,8 @@ function normalizeContent(
   return schema === undefined ? content : { [mediaType]: schema };
 }
 
-// The body schema of each route, by "METHOD /path/{param}", for a body that
-// @elysiajs/openapi leaves without a media type.
-const bodySchemas = new Map<string, unknown>();
-
-type RouteForOpenApi = { method: string; path: string; hooks: { body?: unknown; parse?: unknown } };
-
-// Runs once on the assembled routes. Elysia gives a route without a parser of its own
-// `parse: []`, and @elysiajs/openapi reads any parse list as "only these parsers": with an
-// empty list it documents the body with no media type. Elysia treats an absent list the
-// same way, so the empty list is dropped. A parser function (SCIM's) is skipped by the
-// plugin too, so the normalizer fills that body from the schema recorded here.
-export function prepareRoutesForOpenApi(routes: RouteForOpenApi[]): void {
-  for (const route of routes) {
-    if (Array.isArray(route.hooks.parse) && route.hooks.parse.length === 0)
-      delete route.hooks.parse;
-    if (route.hooks.body && typeof route.hooks.body === 'object') {
-      const path = route.path.replace(/:(\w+)/g, '{$1}');
-      bodySchemas.set(`${route.method.toUpperCase()} ${path}`, route.hooks.body);
-    }
-  }
-}
-
 function normalizeOperationContent(operation: Operation, path: string, method: string): void {
   const requestBody = operation.requestBody;
-  const schema = bodySchemas.get(`${method.toUpperCase()} ${path}`);
-  if (requestBody && 'content' in requestBody && schema && isEmpty(requestBody.content)) {
-    requestBody.content = {
-      [mediaTypeFor(path, method)]: { schema },
-    } as typeof requestBody.content;
-  }
   if (requestBody && 'content' in requestBody && requestBody.content) {
     if (path === '/webhooks/git/{webhookId}' || path === '/webhooks/github/{webhookId}') {
       requestBody.content = {

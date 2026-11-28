@@ -13,9 +13,8 @@ import {
 } from '@repo/auth';
 import { db, hasConfiguredEmailProvider, user } from '@repo/db';
 import { cors } from '@elysiajs/cors';
-import { openapi, type ElysiaOpenAPIConfig } from '@elysiajs/openapi';
+import { swagger } from '@elysiajs/swagger';
 import { Elysia } from 'elysia';
-import { CloudflareAdapter } from 'elysia/adapter/cloudflare-worker';
 import { planner } from './planner';
 import { mountMcp } from './mcp/mount';
 import { setMcpApp } from './mcp/app-ref';
@@ -25,10 +24,9 @@ import { currentUserRoutes } from './modules/current-user';
 import { EmbedSitesSchema } from './modules/settings/model';
 import { apiDocsVisible, getEmbedSites } from './modules/settings/service';
 import { syncOidcGroupsAfterCallback } from './modules/scim/oidc-sync';
-import { normalizeOpenApiResponse, prepareRoutesForOpenApi } from './openapi';
+import { normalizeOpenApiResponse } from './openapi';
 import { requestTracking } from './shared/request-tracker';
 import { requestUser } from './shared/auth-context';
-import { unreadRequest } from './shared/unread-request';
 import pkg from '../../../package.json';
 
 const apiUrl = (process.env.API_URL ?? 'http://localhost:3000').replace(/\/+$/, '');
@@ -83,7 +81,7 @@ function isCrossSiteCookieRequest(request: Request): boolean {
   return site !== null && site !== 'same-origin' && site !== 'none';
 }
 
-// better-auth's API reference and its raw document. The planner's are the openapi routes.
+// better-auth's API reference and its raw document. The planner's are the swagger routes.
 const AUTH_REFERENCE_PATHS = new Set(['/api/auth/reference', '/api/auth/open-api/generate-schema']);
 
 // The response that refuses a request for an API reference, or undefined when the caller may
@@ -103,12 +101,7 @@ async function apiDocsRefusal(request: Request, set: { status?: number | string 
 // The assembled Elysia app, without `.listen()`. `index.ts` imports this and
 // binds the port; tests import it and pass it to Eden Treaty to drive routes in
 // memory (no network). Keep the chain unbroken so `type App` stays accurate.
-// worker.ts runs the same app on Cloudflare Workers, which need their own adapter.
-export const app = new Elysia(
-  globalThis.navigator?.userAgent === 'Cloudflare-Workers'
-    ? { adapter: CloudflareAdapter, aot: false }
-    : {},
-)
+export const app = new Elysia()
   .use(
     cors({
       origin: trustedOrigins,
@@ -136,13 +129,16 @@ export const app = new Elysia(
     new Elysia()
       .onBeforeHandle(({ request, set }) => apiDocsRefusal(request, set))
       .use(
-        openapi({
+        swagger({
           path: '/docs',
           // Render with Scalar's own "default" theme to match the better-auth reference
-          // at /api/auth/reference. `customCss: ""` drops the Elysia theme the plugin
-          // injects when customCss is null/undefined.
-          // The plugin's type marks every Scalar option as required.
-          scalar: { theme: 'default', customCss: '' } as ElysiaOpenAPIConfig['scalar'],
+          // at /api/auth/reference. `customCss: ""` drops the gradient theme that
+          // @elysiajs/swagger injects by default (it falls back to elysiajsTheme only
+          // when customCss is null/undefined).
+          scalarConfig: {
+            theme: 'default',
+            customCss: '',
+          },
           documentation: {
             info: {
               title: "It's Anas Plan API",
@@ -337,9 +333,7 @@ export const app = new Elysia(
   // callback gets one extra step afterwards: folding the provider's `groups` claim
   // into the SCIM group tables, so a group mapped to a project in god mode grants
   // access on an OIDC-only instance too, not just one that also runs a SCIM sync.
-  .all('/api/auth/*', async ({ request: parsed, set }) => {
-    // better-auth reads the body itself; on Workers Elysia has read it already.
-    let request = unreadRequest(parsed);
+  .all('/api/auth/*', async ({ request, set }) => {
     const url = new URL(request.url);
     // better-auth routes on this same pathname and serves a reference on an exact match only.
     if (AUTH_REFERENCE_PATHS.has(url.pathname)) {
@@ -433,8 +427,6 @@ mountMcp(app);
 // tools from the same mcpTool() routes and dispatches them in process. It cannot
 // import this module without a cycle, so the reference is passed here.
 setMcpApp(app);
-
-prepareRoutesForOpenApi(app.routes);
 
 // App type — useful for Eden Treaty (type-safe client) on the frontend and in tests.
 export type App = typeof app;

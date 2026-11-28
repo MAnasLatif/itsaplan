@@ -1,8 +1,6 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    // DOM: the api type-checks the @repo/editor sources it imports.
-    "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "types": ["bun"]
   },
   "include": ["src"]

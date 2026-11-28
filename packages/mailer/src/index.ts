@@ -69,8 +69,7 @@ export interface SendResult {
 
 // The From address for outbound email. An explicit config value wins, then the
 // EMAIL_FROM env var; for SMTP the username (usually the account's own address) is
-// the last fallback. Resend and Cloudflare Email have no natural fallback: each needs
-// a verified sender.
+// the last fallback. Resend has no natural fallback: it needs a verified sender.
 function fromAddress(config: EmailConfig, provider: 'smtp' | 'resend'): string | null {
   if (config.from && config.from.length > 0) return config.from;
   const env = process.env.EMAIL_FROM ?? process.env.NOTIFICATIONS_EMAIL_FROM;
@@ -243,70 +242,14 @@ async function sendResend(
   }
 }
 
-// The send_email binding of Cloudflare Email Service, the part of it this package uses.
-export interface CloudflareEmailBinding {
-  send(message: {
-    from: string | { email: string; name: string };
-    to: string;
-    subject: string;
-    text: string;
-    html: string;
-  }): Promise<{ messageId: string }>;
-}
-
-// Set by a Cloudflare Worker entry from its env, so mail goes out through Email Service
-// when the config names no provider of its own. Unset everywhere else.
-let cloudflareEmail: CloudflareEmailBinding | null = null;
-
-export function setCloudflareEmail(binding: CloudflareEmailBinding | undefined): void {
-  cloudflareEmail = binding ?? null;
-}
-
-export function hasCloudflareEmail(): boolean {
-  return cloudflareEmail !== null;
-}
-
-// "Name <address>" becomes the named form the binding takes.
-function cloudflareSender(from: string): string | { email: string; name: string } {
-  const named = from.match(/^\s*"?([^"<]*?)"?\s*<([^>]+)>\s*$/);
-  return named ? { name: named[1]!.trim(), email: named[2]!.trim() } : from.trim();
-}
-
-async function sendCloudflare(
-  binding: CloudflareEmailBinding,
-  message: EmailMessage,
-  from: string,
-): Promise<SendResult> {
-  try {
-    await binding.send({
-      from: cloudflareSender(from),
-      to: message.to,
-      subject: message.subject,
-      text: message.text,
-      html: message.html,
-    });
-    return { ok: true };
-  } catch (err) {
-    return {
-      ok: false,
-      retryable: true,
-      error: err instanceof Error ? err.message : 'cloudflare email send failed',
-    };
-  }
-}
-
 // True when the config has a usable provider. Callers use it to disable features
 // that depend on outbound email instead of queuing mail that cannot be sent.
 export function hasEmailProvider(config: EmailConfig): boolean {
-  return (
-    smtpReady(config.smtp) ||
-    (config.resend.enabled && config.resend.apiKey.length > 0) ||
-    cloudflareEmail !== null
-  );
+  return smtpReady(config.smtp) || (config.resend.enabled && config.resend.apiKey.length > 0);
 }
 
-// Sends one message with the first enabled provider: SMTP, then Resend, then Cloudflare
-// Email Service when the Worker has its binding.
+// Sends one message with the first enabled provider: SMTP wins over Resend when
+// both are on.
 export async function sendEmail(config: EmailConfig, message: EmailMessage): Promise<SendResult> {
   if (!message.to) return { ok: false, retryable: false, error: 'no recipient' };
   const { smtp, resend } = config;
@@ -319,13 +262,6 @@ export async function sendEmail(config: EmailConfig, message: EmailMessage): Pro
     const from = fromAddress(config, 'resend');
     if (!from) return { ok: false, retryable: false, error: 'EMAIL_FROM is required for Resend' };
     return sendResend(resend, message, from);
-  }
-  if (cloudflareEmail) {
-    const from = fromAddress(config, 'resend');
-    if (!from) {
-      return { ok: false, retryable: false, error: 'EMAIL_FROM is required for Cloudflare Email' };
-    }
-    return sendCloudflare(cloudflareEmail, message, from);
   }
   return { ok: false, retryable: false, error: 'no email provider enabled' };
 }

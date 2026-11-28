@@ -9,16 +9,15 @@ import { and, asc, eq, gt, lte } from 'drizzle-orm';
 import { Step, Mapping } from '@tiptap/pm/transform';
 import { DOCUMENT_BLOCK_TYPES } from '@repo/editor';
 import { markdownToDocumentJson } from '@repo/editor/markdown';
-import { DOMParser } from 'linkedom';
+import { JSDOM } from 'jsdom';
 import { HttpError } from '#shared/lib';
 import { assertValidDocumentContentJson, getDocument } from './service';
 import { collaborationSchema } from './collaboration-schema';
 import { documentVisibleTo } from './access';
 import { documentMentionHandles, fanOutTextMentions } from './mentions';
 
-// linkedom is a DOM in plain JavaScript: it runs no scripts, fetches nothing, and runs
-// on Bun and on Cloudflare Workers.
-const window = { DOMParser: DOMParser as unknown as typeof globalThis.DOMParser };
+// jsdom runs no scripts and fetches nothing unless asked to.
+const { window } = new JSDOM('');
 
 type Transaction = Parameters<Parameters<typeof db.transaction>[0]>[0];
 export async function lockVisibleDocument(

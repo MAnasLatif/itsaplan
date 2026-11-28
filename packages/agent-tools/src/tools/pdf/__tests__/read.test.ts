@@ -17,26 +17,26 @@ describe('pdf_read', () => {
     const bytes = await fixture('text.pdf');
     pinnedFetch.mockImplementation(async () => new Response(bytes));
     const result = (await pdfRead.execute({}, { url: 'https://example.com/notes.pdf' })) as {
-      text: string;
+      markdown: string;
       pageCount: number;
     };
-    expect(result.text).toContain('Release Notes');
+    expect(result.markdown).toContain('# Release Notes');
     expect(result.pageCount).toBeGreaterThan(0);
     expect(pinnedFetch.mock.calls[0]![1]).toMatchObject({ publicOnly: true });
   });
 
   it('splits a long text into parts at line breaks', () => {
-    expect(part('short', 0)).toEqual({ text: 'short', nextOffset: null });
+    expect(part('short', 0)).toEqual({ markdown: 'short', nextOffset: null });
 
     const long = 'x'.repeat(59_000) + '\n' + 'y'.repeat(2_000);
     const first = part(long, 0);
-    expect(first).toEqual({ text: 'x'.repeat(59_000), nextOffset: 59_000 });
+    expect(first).toEqual({ markdown: 'x'.repeat(59_000), nextOffset: 59_000 });
     expect(part(long, first.nextOffset!)).toEqual({
-      text: '\n' + 'y'.repeat(2_000),
+      markdown: '\n' + 'y'.repeat(2_000),
       nextOffset: null,
     });
 
-    expect(part('z'.repeat(70_000), 0).text).toHaveLength(60_000);
+    expect(part('z'.repeat(70_000), 0).markdown).toHaveLength(60_000);
   });
 
   it('returns the passages around each match of a query', () => {
@@ -72,9 +72,9 @@ describe('pdf_read', () => {
     const result = (await pdfRead.execute(
       {},
       { url: 'https://example.com/notes.pdf', query: 'release notes' },
-    )) as { passages: { text: string }[]; text?: string };
-    expect(result.passages[0]!.text).toContain('Release Notes');
-    expect(result.text).toBeUndefined();
+    )) as { passages: { text: string }[]; markdown?: string };
+    expect(result.passages[0]!.text).toContain('# Release Notes');
+    expect(result.markdown).toBeUndefined();
   });
 
   it('follows a redirect through the guard again', async () => {
